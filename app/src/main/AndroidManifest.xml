@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.enigma.levy">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,6 +18,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".AcercaDe"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".Registrar1"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".Registrar2"
+            android:parentActivityName=".Registrar1" />
+        <activity
+            android:name=".Principal"
+            android:label=""
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Configuracion"></activity>
     </application>
 
 </manifest>
