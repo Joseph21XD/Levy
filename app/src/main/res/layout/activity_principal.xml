@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay" >
+                app:popupTheme="@style/AppTheme.PopupOverlay">
 
                 <TextView
                     android:id="@+id/barText"
@@ -36,10 +36,10 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/barImage"
-                    android:src="@drawable/logo"
                     android:layout_width="@dimen/avator_size"
                     android:layout_height="@dimen/avator_size"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/logo" />
 
             </android.support.v7.widget.Toolbar>
 
@@ -47,6 +47,7 @@
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/gray"
                 android:visibility="visible"
                 app:tabGravity="center"
                 app:tabIndicatorColor="@color/secondaryLightColor"
@@ -62,5 +63,23 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </android.support.design.widget.CoordinatorLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="14dp"
+            android:layout_marginEnd="14dp"
+            android:clickable="true"
+            app:backgroundTint="@color/secondaryColor"
+            app:elevation="6dp"
+            app:srcCompat="@drawable/add" />
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

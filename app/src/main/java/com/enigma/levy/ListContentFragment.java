@@ -59,11 +59,12 @@ public class ListContentFragment extends Fragment {
         public TextView description;
         public TextView tienda;
         public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.item_list, parent, false));
-            avator = (ImageView) itemView.findViewById(R.id.list_avatar);
-            name = (TextView) itemView.findViewById(R.id.list_title);
-            description = (TextView) itemView.findViewById(R.id.list_desc);
-            tienda = (TextView) itemView.findViewById(R.id.list_tienda);
+            super(inflater.inflate(Principal.mode, parent, false));
+            avator = (ImageView) itemView.findViewById(R.id.picture);
+            name = (TextView) itemView.findViewById(R.id.name);
+            if(Principal.mode==R.layout.item_card || Principal.mode==R.layout.item_list){
+            description = (TextView) itemView.findViewById(R.id.desc);
+            tienda = (TextView) itemView.findViewById(R.id.store);}
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -78,9 +79,9 @@ public class ListContentFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
-                    /*Intent intent = new Intent(context, DetailActivity.class);
-                    intent.putExtra(DetailActivity.EXTRA_POSITION, getAdapterPosition());
-                    context.startActivity(intent);*/
+                    Intent intent = new Intent(context, ArticuloActivity.class);
+                    intent.putExtra("position", getAdapterPosition());
+                    context.startActivity(intent);
                 }
             });
         }
@@ -107,8 +108,9 @@ public class ListContentFragment extends Fragment {
         public void onBindViewHolder(ViewHolder holder, int position) {
             Glide.with(context).load(Uri.parse(articulos.get(position).getImagen())).into(holder.avator);
             holder.name.setText(articulos.get(position).nombre);
+            if(Principal.mode==R.layout.item_card || Principal.mode==R.layout.item_list){
             holder.description.setText(articulos.get(position).getPrecio()+"");
-            holder.tienda.setText(articulos.get(position).getTienda());
+            holder.tienda.setText(articulos.get(position).getTienda());}
 
         }
 

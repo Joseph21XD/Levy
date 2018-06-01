@@ -4,31 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.enigma.levy.MainActivity">
+    tools:context="com.enigma.levy.Ingresar1">
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            app:srcCompat="@drawable/logo"
-            tools:layout_editor_absoluteX="129dp"
-            tools:layout_editor_absoluteY="127dp" />
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="250dp"
-            android:layout_height="300dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="80dp"
-            android:layout_marginStart="23dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
             android:orientation="vertical">
 
             <TextView
@@ -36,7 +25,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="Usuario"
+                android:gravity="center"
+                android:text="Nombre"
                 android:textColor="@color/secondaryColor"
                 android:textSize="24sp" />
 
@@ -53,7 +43,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="Contraseña"
+                android:gravity="center"
+                android:text="Precio"
                 android:textColor="@color/secondaryColor"
                 android:textSize="24sp" />
 
@@ -65,28 +56,53 @@
                 android:ems="10"
                 android:inputType="textPersonName" />
 
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="Descripción"
+                android:textColor="@color/secondaryColor"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/editText4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:ems="10"
+                android:inputType="textLongMessage|textPersonName" />
+
             <Button
                 android:id="@+id/button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="40dp"
                 android:background="@color/secondaryColor"
-                android:onClick="toMain"
-                android:text="Ingresar"
+                android:onClick="toInsert2"
+                android:text="Continuar"
                 android:textColor="@color/secondaryTextColor" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="13dp"
-            android:layout_marginEnd="17dp"
-            android:clickable="true"
-            android:onClick="registrar"
-            android:text="Registrarse" />
+            android:layout_alignParentTop="true"
+            app:srcCompat="@drawable/logo"
+            tools:layout_editor_absoluteX="129dp"
+            tools:layout_editor_absoluteY="127dp" />
+
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
