@@ -27,16 +27,16 @@ public class StoreActivity extends AppCompatActivity {
 
         int position = getIntent().getIntExtra("position", 0);
 
-        collapsingToolbar.setTitle(Principal.articulos.get(position).getNombre());
+        collapsingToolbar.setTitle(Principal.articulosEnlinea.get(position).getNombre());
         collapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.primaryColor));
 
         ImageView placePicutre = (ImageView) findViewById(R.id.image);
-        Glide.with(StoreActivity.this).load(Principal.articulos.get(position).getImagen()).into(placePicutre);
+        Glide.with(StoreActivity.this).load(Principal.articulosEnlinea.get(position).getImagen()).into(placePicutre);
 
         TextView textView = findViewById(R.id.textView6);
         TextView textView3 = findViewById(R.id.textView10);
-        textView.setText(Principal.articulos.get(position).getNombre());
-        textView3.setText(Principal.articulos.get(position).getDescripcion());
+        textView.setText(Principal.articulosEnlinea.get(position).getNombre());
+        textView3.setText(Principal.articulosEnlinea.get(position).getDescripcion());
     }
 
     public void toMap(View view){

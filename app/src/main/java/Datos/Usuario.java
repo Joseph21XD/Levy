@@ -5,16 +5,18 @@ package Datos;
  */
 
 public class Usuario {
+    int id;
     String nombre;
     String apellido;
     String imagen;
     int rating;
 
-    public Usuario(String nombre, String apellido, String imagen, int rating) {
+    public Usuario(int id, String nombre, String apellido, String imagen, int rating) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.imagen = imagen;
         this.rating= rating;
+        this.id = id;
     }
 
     public String getNombre() {
@@ -47,5 +49,13 @@ public class Usuario {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

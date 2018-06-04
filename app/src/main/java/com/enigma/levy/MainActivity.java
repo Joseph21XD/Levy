@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toMain(View view){
-        user=new Usuario("Carlos","Alvarado", "https://upload.wikimedia.org/wikipedia/commons/0/05/Carlos_Alvarado_Le_Chateu_%28cropped%29.jpg",10);
+        Principal.find="iphone";
+        user=new Usuario(1,"Carlos","Alvarado", "https://upload.wikimedia.org/wikipedia/commons/0/05/Carlos_Alvarado_Le_Chateu_%28cropped%29.jpg",5);
         Intent intent= new Intent(MainActivity.this, Principal.class);
         startActivity(intent);
     }

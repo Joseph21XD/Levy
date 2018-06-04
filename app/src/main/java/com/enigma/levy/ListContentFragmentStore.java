@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,16 +38,15 @@ import Datos.Articulo;
 /**
  * Provides UI for the view with List.
  */
-public class ListContentFragment extends Fragment {
-    ContentAdapter adapter;
+public class ListContentFragmentStore extends Fragment {
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
-        Log.d("ABRIR","HOLA");
-        adapter = new ContentAdapter(recyclerView.getContext(), Principal.articulosEnlinea);
+        ContentAdapter adapter = new ContentAdapter(recyclerView.getContext(), Principal.articulosStore);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -83,7 +81,7 @@ public class ListContentFragment extends Fragment {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, ArticuloActivity.class);
                     intent.putExtra("position", getAdapterPosition());
-                    intent.putExtra("mode", "online");
+                    intent.putExtra("mode", "store");
                     context.startActivity(intent);
                 }
             });
@@ -121,11 +119,6 @@ public class ListContentFragment extends Fragment {
         public int getItemCount() {
             return articulos.size();
         }
-    }
-
-    public void setAdapter(ArrayList<Articulo> arts){
-        adapter.articulos=arts;
-        adapter.notifyDataSetChanged();
     }
 
 }

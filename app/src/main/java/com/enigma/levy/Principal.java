@@ -2,21 +2,18 @@ package com.enigma.levy;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -25,16 +22,26 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import Datos.Articulo;
+import Datos.Ebay;
+import Datos.JsonTask;
 
 public class Principal extends AppCompatActivity {
-    static ArrayList<Articulo> articulos= new ArrayList<>();
-    static int mode= R.layout.item_list;
+    public static ArrayList<Articulo> articulosEnlinea = new ArrayList<>();
+    public static ArrayList<Articulo> articulosUsuarios = new ArrayList<>();
+    public static ArrayList<Articulo> articulosStore = new ArrayList<>();
+    ArrayList<Fragment> fragments = new ArrayList<>();
+    public static int mode= R.layout.item_list;
     SharedPreferences sharedPreferences;
+    int EbayCont;
+    int searchPage=1;
+    static String find;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +59,14 @@ public class Principal extends AppCompatActivity {
                 break;
         }
 
-
-        articulos.add(new Articulo("Carta YUGIOH Obelisco",12.5,"https://ugc.kn3.net/i/origin/http://perso.wanadoo.es/algrfgr/obelisk.jpg","hola","Amazon.com"));
-        articulos.add(new Articulo("Carta YUGIOH Slyfer",12.5,"https://orig00.deviantart.net/a4c6/f/2009/286/6/a/slifer_the_sky_dragon_by_bloodgod741.jpg","hola","Ebay"));
-        articulos.add(new Articulo("Carta YUGIOH Dragón alado de Ra",12.5,"https://ugc.kn3.net/i/origin/http://2.bp.blogspot.com/_atS2u-GxoBw/TCUYPgCUNOI/AAAAAAAAAW0/DtomF5obcGo/s1600/ra1.jpg","hola","Amazon.com"));
-
+        articulosEnlinea.clear();
+        openEbay(find);
+        articulosStore.add(new Articulo("Carta YUGIOH Obelisco",12.5,"https://ugc.kn3.net/i/origin/http://perso.wanadoo.es/algrfgr/obelisk.jpg","hola","Amazon.com"));
+        articulosStore.add(new Articulo("Carta YUGIOH Slyfer",12.5,"https://orig00.deviantart.net/a4c6/f/2009/286/6/a/slifer_the_sky_dragon_by_bloodgod741.jpg","hola","Ebay"));
+        articulosStore.add(new Articulo("Carta YUGIOH Dragón alado de Ra",12.5,"https://ugc.kn3.net/i/origin/http://2.bp.blogspot.com/_atS2u-GxoBw/TCUYPgCUNOI/AAAAAAAAAW0/DtomF5obcGo/s1600/ra1.jpg","hola","Amazon.com"));
+        articulosUsuarios.add(new Articulo("Carta YUGIOH Obelisco",12.5,"https://ugc.kn3.net/i/origin/http://perso.wanadoo.es/algrfgr/obelisk.jpg","hola","Amazon.com"));
+        articulosUsuarios.add(new Articulo("Carta YUGIOH Slyfer",12.5,"https://orig00.deviantart.net/a4c6/f/2009/286/6/a/slifer_the_sky_dragon_by_bloodgod741.jpg","hola","Ebay"));
+        articulosUsuarios.add(new Articulo("Carta YUGIOH Dragón alado de Ra",12.5,"https://ugc.kn3.net/i/origin/http://2.bp.blogspot.com/_atS2u-GxoBw/TCUYPgCUNOI/AAAAAAAAAW0/DtomF5obcGo/s1600/ra1.jpg","hola","Amazon.com"));
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         TextView textView= toolbar.findViewById(R.id.barText);
@@ -68,7 +78,6 @@ public class Principal extends AppCompatActivity {
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
-
         TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         tabs.getTabAt(0).setIcon(R.drawable.online2).setTag("online");
@@ -118,16 +127,19 @@ public class Principal extends AppCompatActivity {
             }
         });
 
-
     }
 
     // Add Fragments to Tabs
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new ListContentFragment(), "");
-        adapter.addFragment(new ListContentFragment(), "");
-        adapter.addFragment(new ListContentFragment(), "");
-        adapter.addFragment(new PerfilFragment(), "");
+        fragments.add(new ListContentFragment());
+        fragments.add(new ListContentFragmentStore());
+        fragments.add(new ListContentFragmentUser());
+        fragments.add(new PerfilFragment());
+        adapter.addFragment(fragments.get(0), "");
+        adapter.addFragment(fragments.get(1), "");
+        adapter.addFragment(fragments.get(2), "");
+        adapter.addFragment(fragments.get(3), "");
         viewPager.setAdapter(adapter);
     }
 
@@ -169,13 +181,16 @@ public class Principal extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d("RESULT", "SUBMIT");
+                articulosEnlinea.clear();
+                ListContentFragment listContentFragment= (ListContentFragment) fragments.get(0);
+                find= query.replaceAll(" ","%20");
+                openEbay(find);
+                listContentFragment.setAdapter(articulosEnlinea);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.d("RESULT", "CHANGE");
                 return false;
             }
         });
@@ -189,4 +204,29 @@ public class Principal extends AppCompatActivity {
         searchEditText.setTextColor(getResources().getColor(R.color.primaryTextColor));
         return super.onCreateOptionsMenu(menu);
     }
+
+
+    public void openEbay(String busqueda){
+        JsonTask jsonTask= new JsonTask();
+        String url= "https://svcs.ebay.com/services/search/FindingService/v1" +
+                "?OPERATION-NAME=findItemsByKeywords&SERVICE-VERSION=1.0.0" +
+                "&SECURITY-APPNAME="+getString(R.string.ebayKey)+"&RESPONSE-DATA-FORMAT=JSON" +
+                "&callback=_cb_findItemsByKeywords&REST-PAYLOAD" +
+                "&keywords="+busqueda+
+                "&paginationInput.entriesPerPage=6" +
+                "&paginationInput.pageNumber="+searchPage+
+                "&GLOBAL-ID=EBAY-US" +
+                "&siteid=0";
+        try {
+            String result= jsonTask.execute(url).get();
+            EbayCont= Ebay.obtenerDatosEbay(result);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
+}

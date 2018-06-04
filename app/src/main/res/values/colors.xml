@@ -9,4 +9,7 @@
   <color name="primaryTextColor">#ffffff</color>
   <color name="secondaryTextColor">#ffffff</color>
   <color name="gray">#e0e0e0</color>
+  <color name="medio">#ffc107</color>
+  <color name="buena">#00c853</color>
+  <color name="mala">#d32f2f</color>
 </resources>

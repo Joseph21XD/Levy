@@ -52,8 +52,8 @@
             android:id="@+id/store"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/desc"
-            android:layout_below="@+id/desc"
+            android:layout_alignStart="@+id/comment"
+            android:layout_below="@+id/comment"
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@color/primaryTextColor"
@@ -61,7 +61,7 @@
             tools:text="$2000" />
 
         <TextView
-            android:id="@+id/desc"
+            android:id="@+id/comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/picture"

@@ -10,6 +10,7 @@ public class Articulo {
     public String imagen;
     public String descripcion;
     public String tienda;
+    public String url;
 
     public Articulo(String nombre, Double precio, String imagen, String descripcion, String tienda) {
         this.nombre = nombre;
@@ -17,6 +18,14 @@ public class Articulo {
         this.imagen = imagen;
         this.descripcion = descripcion;
         this.tienda= tienda;
+    }
+    public Articulo(String nombre, Double precio, String imagen, String descripcion, String tienda, String url) {
+        this.nombre = nombre;
+        this.precio = precio;
+        this.imagen = imagen;
+        this.descripcion = descripcion;
+        this.tienda= tienda;
+        this.url= url;
     }
 
     public String getNombre() {
@@ -57,5 +66,13 @@ public class Articulo {
 
     public void setTienda(String tienda) {
         this.tienda = tienda;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

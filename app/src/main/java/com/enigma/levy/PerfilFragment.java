@@ -6,15 +6,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -29,12 +29,12 @@ public class PerfilFragment extends Fragment {
     public void onActivityCreated(Bundle state) {
         super.onActivityCreated(state);
         RecyclerView recyclerView= getView().findViewById(R.id.recycler);
-        PerfilFragment.ContentAdapter adapter = new PerfilFragment.ContentAdapter(recyclerView.getContext(), Principal.articulos);
+        PerfilFragment.ContentAdapter adapter = new PerfilFragment.ContentAdapter(recyclerView.getContext(), Principal.articulosEnlinea);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        ImageView buttonLogout= getView().findViewById(R.id.imageView4);
+        LinearLayout buttonLogout= getView().findViewById(R.id.layoutLogout);
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,11 +42,21 @@ public class PerfilFragment extends Fragment {
             }
         });
 
-        ImageView buttonSettings= getView().findViewById(R.id.imageView5);
+        LinearLayout buttonSettings= getView().findViewById(R.id.layoutSettings);
         buttonSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 settings(v);
+            }
+        });
+
+        RatingBar ratingBar = getView().findViewById(R.id.ratingBar);
+        ratingBar.setRating((float) MainActivity.user.getRating()/2);
+
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                ratingBar.setRating((float) MainActivity.user.getRating()/2);
             }
         });
 
@@ -80,7 +90,7 @@ public class PerfilFragment extends Fragment {
             super(inflater.inflate(R.layout.item_list, parent, false));
             avator = (ImageView) itemView.findViewById(R.id.picture);
             name = (TextView) itemView.findViewById(R.id.name);
-            description = (TextView) itemView.findViewById(R.id.desc);
+            description = (TextView) itemView.findViewById(R.id.comment);
             tienda = (TextView) itemView.findViewById(R.id.store);
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override

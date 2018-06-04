@@ -118,6 +118,15 @@
                 android:onClick="toStore"
                 android:text="visitar sitio"
                 android:textColor="@color/secondaryTextColor" />
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@color/secondaryColor"
+                android:onClick="toComment"
+                android:text="comentarios"
+                android:textColor="@color/secondaryTextColor" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
