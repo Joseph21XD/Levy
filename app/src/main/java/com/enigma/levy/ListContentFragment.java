@@ -32,9 +32,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import Datos.Articulo;
+import Datos.Ebay;
+import Datos.JsonTask;
 
 /**
  * Provides UI for the view with List.
@@ -48,6 +53,8 @@ public class ListContentFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
         Log.d("ABRIR","HOLA");
+        if(Principal.articulosEnlinea.isEmpty())
+            openEbay(Principal.find);
         adapter = new ContentAdapter(recyclerView.getContext(), Principal.articulosEnlinea);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
@@ -124,8 +131,37 @@ public class ListContentFragment extends Fragment {
     }
 
     public void setAdapter(ArrayList<Articulo> arts){
-        adapter.articulos=arts;
-        adapter.notifyDataSetChanged();
+        try {
+            adapter.articulos = arts;
+            adapter.notifyDataSetChanged();
+        }
+        catch (Exception e){
+
+        }
+    }
+
+    public void openEbay(String busqueda){
+        JsonTask jsonTask= new JsonTask();
+        String url= "https://svcs.ebay.com/services/search/FindingService/v1" +
+                "?OPERATION-NAME=findItemsByKeywords&SERVICE-VERSION=1.0.0" +
+                "&SECURITY-APPNAME="+getString(R.string.ebayKey)+"&RESPONSE-DATA-FORMAT=JSON" +
+                "&callback=_cb_findItemsByKeywords&REST-PAYLOAD" +
+                "&keywords="+busqueda+
+                "&paginationInput.entriesPerPage=6" +
+                "&paginationInput.pageNumber="+Principal.searchPage+
+                "&GLOBAL-ID=EBAY-US" +
+                "&siteid=0";
+        try {
+            String result= jsonTask.execute(url).get();
+            Principal.EbayCont= Ebay.obtenerDatosEbay(result);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

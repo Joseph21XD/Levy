@@ -4,14 +4,18 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,26 +24,44 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import Datos.Articulo;
+import Datos.BackendConnection;
 import Datos.Comentario;
 import Datos.Usuario;
 
 public class CommentActivity extends AppCompatActivity {
     ArrayList<Comentario> comentarios;
+    SharedPreferences sharedPreferences;
+    ContentAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
-        comentarios= new ArrayList<>();
-        comentarios.add(new Comentario(2,"Krillin","GOKUUUUU! AHHHH!","http://www.boladedragon.com/dragonball/informacion/dbkai47_24.jpg"));
-        comentarios.add(new Comentario(2,"Krillin","","https://k33.kn3.net/taringa/2/6/8/1/5/7/83/espiritudelenin/E68.jpg"));
-        comentarios.add(new Comentario(1,"Gokú","NOOOOO! KRILLIN!!!","http://ytimg.googleusercontent.com/vi/NjR5pQjBMJ4/mqdefault.jpg"));
-        comentarios.add(new Comentario(1,"Gokú","AHHHHHHH!","https://vignette.wikia.nocookie.net/dragonball/images/8/88/Son_Goku_se_transforma_en_Super_Saiyan_por_primera_vez.png/revision/latest?cb=20171229231858&path-prefix=es"));
+        sharedPreferences= this.getSharedPreferences("com.enigma.levy", getApplicationContext().MODE_PRIVATE);
+        comentarios= BackendConnection.ObtenerComentarios(ArticuloActivity.articulo.getId(),sharedPreferences.getString("token",""));
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        ContentAdapter adapter = new CommentActivity.ContentAdapter(CommentActivity.this, comentarios);
+        adapter = new CommentActivity.ContentAdapter(CommentActivity.this, comentarios);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(CommentActivity.this));
+    }
+
+    public void comentar(View view){
+        EditText editText = findViewById(R.id.commenttext);
+        BackendConnection.comentar(ArticuloActivity.articulo.getId(),MainActivity.user.getId(),editText.getText().toString(),MainActivity.user.getToken());
+        comentarios.clear();
+        comentarios= BackendConnection.ObtenerComentarios(ArticuloActivity.articulo.getId(),sharedPreferences.getString("token",""));
+        setAdapter(comentarios);
+    }
+
+    public void setAdapter(ArrayList<Comentario> arts){
+        try {
+            adapter.comentarios = arts;
+            adapter.notifyDataSetChanged();
+        }
+        catch (Exception e){
+
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -92,7 +114,8 @@ public class CommentActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(CommentActivity.ViewHolder holder, int position) {
-            if(comentarios.get(position).getId()==MainActivity.user.getId()){
+            Log.d("COMETARIO", comentarios.get(position).getId()+"/"+MainActivity.user.getId());
+            if((comentarios.get(position).getId()+"").equals(MainActivity.user.getId())){
                 Glide.with(context).load(Uri.parse(comentarios.get(position).getImagen())).into(holder.avator2);
                 holder.name2.setText(comentarios.get(position).getNombre());
                 holder.comment2.setText(comentarios.get(position).getComentario());
@@ -115,5 +138,14 @@ public class CommentActivity extends AppCompatActivity {
         public int getItemCount() {
             return comentarios.size();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
     }
 }

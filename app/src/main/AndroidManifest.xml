@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -60,7 +61,9 @@
             android:name=".DetailActivity"
             android:label="Hola"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".EditActivity" />
+        <activity android:name=".EditActivity"
+            android:label="Hola"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -84,7 +87,10 @@
         <activity android:name=".PerfilUserActivity"
             android:parentActivityName=".Principal"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CommentActivity"></activity>
+        <activity android:name=".CommentActivity"
+            android:parentActivityName=".ArticuloActivity"></activity>
+        <service android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
+            android:enabled="true" />
     </application>
 
 </manifest>

@@ -5,11 +5,13 @@ package Datos;
  */
 
 public class Articulo {
+    public String id;
     public String nombre;
     public Double precio;
     public String imagen;
     public String descripcion;
     public String tienda;
+    public String modo;
     public String url;
 
     public Articulo(String nombre, Double precio, String imagen, String descripcion, String tienda) {
@@ -26,6 +28,16 @@ public class Articulo {
         this.descripcion = descripcion;
         this.tienda= tienda;
         this.url= url;
+    }
+
+    public Articulo(String id, String nombre, Double precio, String imagen, String descripcion, String tienda, String modo) {
+        this.id = id;
+        this.nombre = nombre;
+        this.precio = precio;
+        this.imagen = imagen;
+        this.descripcion = descripcion;
+        this.tienda = tienda;
+        this.modo = modo;
     }
 
     public String getNombre() {
@@ -74,5 +86,21 @@ public class Articulo {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getModo() {
+        return modo;
+    }
+
+    public void setModo(String modo) {
+        this.modo = modo;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

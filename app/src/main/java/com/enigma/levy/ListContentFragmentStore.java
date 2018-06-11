@@ -39,14 +39,14 @@ import Datos.Articulo;
  * Provides UI for the view with List.
  */
 public class ListContentFragmentStore extends Fragment {
-
+    ContentAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
-        ContentAdapter adapter = new ContentAdapter(recyclerView.getContext(), Principal.articulosStore);
+        adapter = new ContentAdapter(recyclerView.getContext(), Principal.articulosStore);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -111,7 +111,7 @@ public class ListContentFragmentStore extends Fragment {
             holder.name.setText(articulos.get(position).nombre);
             if(Principal.mode==R.layout.item_card || Principal.mode==R.layout.item_list){
             holder.description.setText(articulos.get(position).getPrecio()+"");
-            holder.tienda.setText(articulos.get(position).getTienda());}
+            holder.tienda.setText("");}
 
         }
 
@@ -119,6 +119,17 @@ public class ListContentFragmentStore extends Fragment {
         public int getItemCount() {
             return articulos.size();
         }
+    }
+
+    public void setAdapter(ArrayList<Articulo> arts){
+        try {
+            adapter.articulos = arts;
+            adapter.notifyDataSetChanged();
+        }
+        catch (Exception e){
+
+        }adapter.articulos=arts;
+        adapter.notifyDataSetChanged();
     }
 
 }

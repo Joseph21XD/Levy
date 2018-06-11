@@ -88,6 +88,26 @@
                 android:textColor="@color/secondaryColor"
                 android:textSize="18sp" />
 
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="Dirección"
+                android:textColor="@color/secondaryColor"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="TextView"
+                android:textColor="@color/secondaryColor"
+                android:textSize="18sp" />
+
             <Button
                 android:id="@+id/button5"
                 android:layout_width="match_parent"

@@ -4,11 +4,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +21,27 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import Datos.Articulo;
+import Datos.BackendConnection;
+import Datos.Ebay;
+import Datos.JsonTask;
 
 public class PerfilFragment extends Fragment {
+
+    SharedPreferences sharedPreferences;
 
     @Override
     public void onActivityCreated(Bundle state) {
         super.onActivityCreated(state);
+        Log.d("MOSTRADO"," NO MOSTRADO");
+        sharedPreferences= getContext().getSharedPreferences("com.enigma.levy", getContext().MODE_PRIVATE);
         RecyclerView recyclerView= getView().findViewById(R.id.recycler);
-        PerfilFragment.ContentAdapter adapter = new PerfilFragment.ContentAdapter(recyclerView.getContext(), Principal.articulosEnlinea);
+        PerfilFragment.ContentAdapter adapter = new PerfilFragment.ContentAdapter(recyclerView.getContext(), Principal.articulosPersonales);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -50,6 +62,9 @@ public class PerfilFragment extends Fragment {
             }
         });
 
+        if(MainActivity.user.getRating()==-1){
+        int rate= BackendConnection.Rating(MainActivity.user.getId(),MainActivity.user.getToken());
+        MainActivity.user.setRating(rate);}
         RatingBar ratingBar = getView().findViewById(R.id.ratingBar);
         ratingBar.setRating((float) MainActivity.user.getRating()/2);
 
@@ -65,11 +80,18 @@ public class PerfilFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("MOSTRAD","MOSTRADO");
         return inflater.inflate(R.layout.fragment_perfil, container, false);
     }
 
     public void logout(View view){
+        Principal.articulosEnlinea.clear();
+        Principal.articulosUsuarios.clear();
+        Principal.articulosPersonales.clear();
+        Principal.articulosStore.clear();
         Context context= view.getContext();
+        sharedPreferences.edit().putString("token","").apply();
+        MainActivity.user = null;
         Intent intent =new Intent(context,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         context.startActivity(intent);
     }
@@ -115,7 +137,13 @@ public class PerfilFragment extends Fragment {
                                                 vcontext.startActivity(intent);
                                                 break;
                                             case 1:
-                                                    break;
+                                                String id= Principal.articulosPersonales.get(getAdapterPosition()).getId();
+                                                BackendConnection.BorrarArticulo(id, MainActivity.user.getToken());
+                                                Principal.articulosPersonales.clear();
+                                                Intent intent2 = new Intent(vcontext, Principal.class);
+                                                intent2.putExtra("position", getAdapterPosition());
+                                                vcontext.startActivity(intent2);
+                                                break;
                                             case 2: break;
                                         }
                                 }
@@ -129,6 +157,10 @@ public class PerfilFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
+                    Intent intent = new Intent(context, ArticuloActivity.class);
+                    intent.putExtra("position", getAdapterPosition());
+                    intent.putExtra("mode", "personal");
+                    context.startActivity(intent);
                 }
             });
         }
@@ -156,7 +188,7 @@ public class PerfilFragment extends Fragment {
             Glide.with(context).load(Uri.parse(articulos.get(position).getImagen())).into(holder.avator);
             holder.name.setText(articulos.get(position).nombre);
             holder.description.setText(articulos.get(position).getPrecio()+"");
-            holder.tienda.setText(articulos.get(position).getTienda());
+            //holder.tienda.setText(articulos.get(position).getTienda());
 
         }
 
@@ -165,6 +197,7 @@ public class PerfilFragment extends Fragment {
             return articulos.size();
         }
     }
+
 
 
 }

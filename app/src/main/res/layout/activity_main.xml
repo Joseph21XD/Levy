@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName|textPassword" />
 
             <Button
                 android:id="@+id/button"
@@ -74,6 +74,13 @@
                 android:onClick="toMain"
                 android:text="Ingresar"
                 android:textColor="@color/secondaryTextColor" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible" />
         </LinearLayout>
 
         <TextView

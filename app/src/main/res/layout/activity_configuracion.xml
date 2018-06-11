@@ -60,6 +60,18 @@
             android:paddingTop="@dimen/md_keylines">
 
             <TextView
+                android:id="@+id/textView18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="right"
+                android:onClick="abrirGaleria"
+                android:text="cambiar de imagen"
+                android:textColor="@color/secondaryLightColor" />
+
+            <TextView
                 android:id="@+id/nombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -86,12 +98,32 @@
                 android:layout_marginBottom="@dimen/md_keylines"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:text="Apellido  "
+                android:text="Primer Apellido"
                 android:textColor="@color/secondaryColor"
                 android:textSize="@dimen/article_titles" />
 
             <EditText
                 android:id="@+id/editText6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/md_keylines"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/apellid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/md_keylines"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:text="Segundo Apellido"
+                android:textColor="@color/secondaryColor"
+                android:textSize="@dimen/article_titles" />
+
+            <EditText
+                android:id="@+id/editText8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/md_keylines"
@@ -165,9 +197,10 @@
                 android:id="@+id/button4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="30dp"
                 android:layout_weight="1"
                 android:background="@color/secondaryColor"
+                android:onClick="saveChanges"
                 android:text="Guardar Cambios"
                 android:textColor="@color/primaryTextColor" />
 

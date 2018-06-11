@@ -3,10 +3,12 @@ package com.enigma.levy;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -39,8 +41,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        LatLng sydney = new LatLng(Double.parseDouble(StoreActivity.store.getLat()), Double.parseDouble(StoreActivity.store.getLon()));
+        mMap.addMarker(new MarkerOptions().position(sydney).title(StoreActivity.store.getNombre()).icon(BitmapDescriptorFactory.fromResource(R.drawable.point)));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(sydney, 11);
+        mMap.animateCamera(cameraUpdate);
     }
 }

@@ -11,7 +11,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import Datos.Store;
+
 public class StoreActivity extends AppCompatActivity {
+
+    static Store store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,17 +30,21 @@ public class StoreActivity extends AppCompatActivity {
         // collapsingToolbar.setTitle(getString(R.string.item_title));
 
         int position = getIntent().getIntExtra("position", 0);
+        //Av. 4 San José 9.932564, -84.080290
+        store = ArticuloActivity.store;
 
-        collapsingToolbar.setTitle(Principal.articulosEnlinea.get(position).getNombre());
+        collapsingToolbar.setTitle(store.getNombre());
         collapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.primaryColor));
 
         ImageView placePicutre = (ImageView) findViewById(R.id.image);
-        Glide.with(StoreActivity.this).load(Principal.articulosEnlinea.get(position).getImagen()).into(placePicutre);
+        Glide.with(StoreActivity.this).load(store.getImagen()).into(placePicutre);
 
         TextView textView = findViewById(R.id.textView6);
         TextView textView3 = findViewById(R.id.textView10);
-        textView.setText(Principal.articulosEnlinea.get(position).getNombre());
-        textView3.setText(Principal.articulosEnlinea.get(position).getDescripcion());
+        TextView textView2 = findViewById(R.id.textView11);
+        textView.setText(store.getNombre());
+        textView3.setText(store.getDescripcion());
+        textView2.setText(store.getDireccion());
     }
 
     public void toMap(View view){

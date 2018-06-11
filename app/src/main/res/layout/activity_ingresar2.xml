@@ -16,6 +16,8 @@
             android:layout_height="250dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:onClick="abrirGaleria"
             app:srcCompat="@drawable/logo" />
 
         <TextView
@@ -24,7 +26,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/imageView3"
+            android:clickable="true"
             android:gravity="center"
+            android:onClick="abrirGaleria"
             android:text="Seleccione una imagen"
             android:textColor="@color/secondaryColor"
             android:textSize="24sp" />
@@ -37,6 +41,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="52dp"
             android:background="@color/secondaryColor"
+            android:onClick="signup"
             android:text="Ingresar"
             android:textColor="@color/secondaryTextColor" />
     </RelativeLayout>

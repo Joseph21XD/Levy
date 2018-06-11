@@ -14,10 +14,18 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import Datos.Articulo;
+import Datos.BackendConnection;
+import Datos.Store;
+import Datos.Usuario;
+
 public class ArticuloActivity extends AppCompatActivity {
 
     String mode;
     int position;
+    static Articulo articulo;
+    static Usuario usuario;
+    static Store store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,20 +42,47 @@ public class ArticuloActivity extends AppCompatActivity {
         position = getIntent().getIntExtra("position", -1);
         mode = getIntent().getStringExtra("mode");
 
-        collapsingToolbar.setTitle(Principal.articulosEnlinea.get(position).getNombre());
-        collapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.primaryColor));
-
-        ImageView placePicutre = (ImageView) findViewById(R.id.image);
-        Glide.with(ArticuloActivity.this).load(Principal.articulosEnlinea.get(position).getImagen()).into(placePicutre);
-
+        if(mode.equals("online")){
+            Button button = findViewById(R.id.button6);
+            button.setVisibility(View.INVISIBLE);
+        }
+        if(mode.equals("personal")){
+            Button button = findViewById(R.id.button5);
+            button.setVisibility(View.INVISIBLE);
+        }
         TextView textView = findViewById(R.id.textView6);
         TextView textView1 = findViewById(R.id.textView7);
         TextView textView2 = findViewById(R.id.textView8);
         TextView textView3 = findViewById(R.id.textView10);
-        textView.setText(Principal.articulosEnlinea.get(position).getNombre());
-        textView1.setText("Precio: "+Principal.articulosEnlinea.get(position).getPrecio());
-        textView2.setText("Tienda: "+Principal.articulosEnlinea.get(position).getTienda());
-        textView3.setText(Principal.articulosEnlinea.get(position).getDescripcion());
+        ImageView placePicutre = (ImageView) findViewById(R.id.image);
+
+        if(mode.equals("online"))
+            articulo = Principal.articulosEnlinea.get(position);
+        else if(mode.equals("store")){
+            store = BackendConnection.getTienda(Principal.articulosStore.get(position).getTienda());
+            articulo = Principal.articulosStore.get(position);
+        }
+        else if(mode.equals("personal"))
+            articulo = Principal.articulosPersonales.get(position);
+        else{
+            usuario = BackendConnection.getUsuario(Principal.articulosStore.get(position).getTienda());
+            articulo = Principal.articulosUsuarios.get(position);
+        }
+
+        collapsingToolbar.setTitle(articulo.getNombre());
+        collapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.primaryColor));
+        Glide.with(ArticuloActivity.this).load(articulo.getImagen()).into(placePicutre);
+        textView.setText(articulo.getNombre());
+        textView1.setText("Precio: "+articulo.getPrecio());
+        if(mode.equals("store"))
+            textView2.setText("Proveedor: "+store.getNombre());
+        else if(mode.equals("user"))
+            textView2.setText("Proveedor: "+usuario.getNombre());
+        else if(mode.equals("personal"))
+            textView2.setText("Proveedor: "+MainActivity.user.getNombre()+" "+MainActivity.user.getApellido1()+" "+MainActivity.user.getApellido2());
+        else
+            textView2.setText("Proveedor: "+articulo.getTienda());
+        textView3.setText(articulo.getDescripcion());
     }
 
     public void toStore(View view){
@@ -55,7 +90,7 @@ public class ArticuloActivity extends AppCompatActivity {
         Intent intent= new Intent(ArticuloActivity.this,StoreActivity.class);
         startActivity(intent);}
         if(mode.equals("online")){
-            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(Principal.articulosEnlinea.get(position).getUrl()));
+            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(articulo.getUrl()));
             startActivity(i);
         }
         if(mode.equals("user")){
@@ -70,12 +105,4 @@ public class ArticuloActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return false;
-    }
 }

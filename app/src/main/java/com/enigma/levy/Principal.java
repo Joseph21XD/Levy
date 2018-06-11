@@ -19,8 +19,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.StringSignature;
 
 import org.json.JSONException;
 
@@ -29,6 +31,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import Datos.Articulo;
+import Datos.BackendConnection;
 import Datos.Ebay;
 import Datos.JsonTask;
 
@@ -36,11 +39,12 @@ public class Principal extends AppCompatActivity {
     public static ArrayList<Articulo> articulosEnlinea = new ArrayList<>();
     public static ArrayList<Articulo> articulosUsuarios = new ArrayList<>();
     public static ArrayList<Articulo> articulosStore = new ArrayList<>();
+    public static ArrayList<Articulo> articulosPersonales = new ArrayList<>();
     ArrayList<Fragment> fragments = new ArrayList<>();
     public static int mode= R.layout.item_list;
     SharedPreferences sharedPreferences;
-    int EbayCont;
-    int searchPage=1;
+    static int EbayCont;
+    static int searchPage=1;
     static String find;
 
     @Override
@@ -50,6 +54,7 @@ public class Principal extends AppCompatActivity {
 
         sharedPreferences= this.getSharedPreferences("com.enigma.levy", getApplicationContext().MODE_PRIVATE);
         String listMode= sharedPreferences.getString("list","lista");
+        Log.d("LISTA",listMode);
         switch (listMode){
             case "carta": mode= R.layout.item_card;
                             break;
@@ -58,21 +63,19 @@ public class Principal extends AppCompatActivity {
             case "azulejo":mode= R.layout.item_tile;
                 break;
         }
-
-        articulosEnlinea.clear();
-        openEbay(find);
-        articulosStore.add(new Articulo("Carta YUGIOH Obelisco",12.5,"https://ugc.kn3.net/i/origin/http://perso.wanadoo.es/algrfgr/obelisk.jpg","hola","Amazon.com"));
-        articulosStore.add(new Articulo("Carta YUGIOH Slyfer",12.5,"https://orig00.deviantart.net/a4c6/f/2009/286/6/a/slifer_the_sky_dragon_by_bloodgod741.jpg","hola","Ebay"));
-        articulosStore.add(new Articulo("Carta YUGIOH Dragón alado de Ra",12.5,"https://ugc.kn3.net/i/origin/http://2.bp.blogspot.com/_atS2u-GxoBw/TCUYPgCUNOI/AAAAAAAAAW0/DtomF5obcGo/s1600/ra1.jpg","hola","Amazon.com"));
-        articulosUsuarios.add(new Articulo("Carta YUGIOH Obelisco",12.5,"https://ugc.kn3.net/i/origin/http://perso.wanadoo.es/algrfgr/obelisk.jpg","hola","Amazon.com"));
-        articulosUsuarios.add(new Articulo("Carta YUGIOH Slyfer",12.5,"https://orig00.deviantart.net/a4c6/f/2009/286/6/a/slifer_the_sky_dragon_by_bloodgod741.jpg","hola","Ebay"));
-        articulosUsuarios.add(new Articulo("Carta YUGIOH Dragón alado de Ra",12.5,"https://ugc.kn3.net/i/origin/http://2.bp.blogspot.com/_atS2u-GxoBw/TCUYPgCUNOI/AAAAAAAAAW0/DtomF5obcGo/s1600/ra1.jpg","hola","Amazon.com"));
+        if(articulosPersonales.isEmpty() || articulosUsuarios.isEmpty() || articulosStore.isEmpty()){
+            articulosPersonales.clear();
+            articulosStore.clear();
+            articulosUsuarios.clear();
+            BackendConnection.getArticulos();}
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         TextView textView= toolbar.findViewById(R.id.barText);
         ImageView imageView= toolbar.findViewById(R.id.barImage);
-
-        textView.setText(MainActivity.user.getNombre()+" "+MainActivity.user.getApellido());
+        if((MainActivity.user.getNombre()+" "+MainActivity.user.getApellido1()+" "+MainActivity.user.getApellido2()).length()<=22)
+            textView.setText(MainActivity.user.getNombre()+" "+MainActivity.user.getApellido1()+" "+MainActivity.user.getApellido2());
+        else
+            textView.setText(MainActivity.user.getNombre()+" "+MainActivity.user.getApellido1());
         Glide.with(Principal.this).load(MainActivity.user.getImagen()).into(imageView);
 
 
@@ -182,11 +185,24 @@ public class Principal extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 articulosEnlinea.clear();
+                articulosStore.clear();
+                articulosUsuarios.clear();
                 ListContentFragment listContentFragment= (ListContentFragment) fragments.get(0);
+                ListContentFragmentStore listContentFragment2= (ListContentFragmentStore) fragments.get(1);
+                ListContentFragmentUser listContentFragment3= (ListContentFragmentUser) fragments.get(2);
                 find= query.replaceAll(" ","%20");
                 openEbay(find);
+                BackendConnection.search(query, sharedPreferences.getString("token",""));
                 listContentFragment.setAdapter(articulosEnlinea);
-                return false;
+                listContentFragment2.setAdapter(articulosStore);
+                listContentFragment3.setAdapter(articulosUsuarios);
+                String s="No se encontraron: \n";
+                if(articulosUsuarios.isEmpty()){  s+="Articulos de usuarios\n";}
+                if(articulosStore.isEmpty()){  s+="Articulos de tiendas\n";}
+                if(!s.equals("No se encontraron: \n")){
+                    Toast.makeText(Principal.this,s,Toast.LENGTH_SHORT).show();
+                }
+                return true;
             }
 
             @Override

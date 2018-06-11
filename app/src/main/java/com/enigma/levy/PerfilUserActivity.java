@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,8 +24,15 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import Datos.Articulo;
+import Datos.BackendConnection;
+import Datos.Score;
+import Datos.Usuario;
 
 public class PerfilUserActivity extends AppCompatActivity {
+    public static ArrayList<Articulo> userArticulos = new ArrayList<>();
+    public static Usuario user;
+    Score score;
+    TextView textViewRate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,38 +46,68 @@ public class PerfilUserActivity extends AppCompatActivity {
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         // Set title of Detail page
         // collapsingToolbar.setTitle(getString(R.string.item_title));
+        user = ArticuloActivity.usuario;
+        userArticulos.clear();
+        BackendConnection.getArticulosUser(user.getId());
+        user.setRating((BackendConnection.Rating(user.getId(),MainActivity.user.getToken())));
 
-        collapsingToolbar.setTitle(MainActivity.user.getNombre()+" "+MainActivity.user.getApellido());
+        collapsingToolbar.setTitle(user.getNombre()+" "+user.getApellido1()+" "+user.getApellido2());
         collapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.primaryColor));
 
         ImageView placePicutre = (ImageView) findViewById(R.id.image);
-        Glide.with(PerfilUserActivity.this).load(MainActivity.user.getImagen()).into(placePicutre);
+        Glide.with(PerfilUserActivity.this).load(user.getImagen()).into(placePicutre);
 
         RecyclerView recyclerView= findViewById(R.id.recycler);
-        PerfilUserActivity.ContentAdapter adapter = new PerfilUserActivity.ContentAdapter(PerfilUserActivity.this, Principal.articulosEnlinea);
+        PerfilUserActivity.ContentAdapter adapter = new PerfilUserActivity.ContentAdapter(PerfilUserActivity.this, userArticulos);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(PerfilUserActivity.this));
 
         RatingBar ratingBar = findViewById(R.id.ratingBar);
+        score= BackendConnection.getIdRating(user.getId(),MainActivity.user.getId(),MainActivity.user.getToken());
+        if(score!=null)
+            ratingBar.setRating((float)score.getScore()/2);
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                    String rate= ((int)(v*2))+"";
+                    if(score!=null){
+                        BackendConnection.updateIdRating(score.getId(),user.getId(),MainActivity.user.getId(),rate,MainActivity.user.getToken());
+                        score= BackendConnection.getIdRating(user.getId(),MainActivity.user.getId(),MainActivity.user.getToken());
+                        user.setRating((BackendConnection.Rating(user.getId(),MainActivity.user.getToken())));
+                    }
+                    else{
+                        BackendConnection.newIdRating(user.getId(),MainActivity.user.getId(),rate,MainActivity.user.getToken());
+                        score= BackendConnection.getIdRating(user.getId(),MainActivity.user.getId(),MainActivity.user.getToken());
+                        user.setRating((BackendConnection.Rating(user.getId(),MainActivity.user.getToken())));
+                    }
+                if(user.getRating()>=8){
+                    textViewRate.setText("BUENA");
+                    textViewRate.setTextColor(getResources().getColor(R.color.buena));
+                }
+                else if(user.getRating()>=4){
+                    textViewRate.setText("MEDIA");
+                    textViewRate.setTextColor(getResources().getColor(R.color.medio));
+                }
+                else{
+                    textViewRate.setText("MALA");
+                    textViewRate.setTextColor(getResources().getColor(R.color.mala));
+                }
             }
         });
 
-        TextView textView = findViewById(R.id.textView15);
-        if(MainActivity.user.getRating()>=8){
-            textView.setText("BUENA");
-            textView.setTextColor(getResources().getColor(R.color.buena));
+        textViewRate = findViewById(R.id.textView15);
+        if(user.getRating()>=8){
+            textViewRate.setText("BUENA");
+            textViewRate.setTextColor(getResources().getColor(R.color.buena));
         }
-        else if(MainActivity.user.getRating()>=4){
-            textView.setText("MEDIA");
-            textView.setTextColor(getResources().getColor(R.color.medio));
+        else if(user.getRating()>=4){
+            textViewRate.setText("MEDIA");
+            textViewRate.setTextColor(getResources().getColor(R.color.medio));
         }
         else{
-            textView.setText("MALA");
-            textView.setTextColor(getResources().getColor(R.color.mala));
+            textViewRate.setText("MALA");
+            textViewRate.setTextColor(getResources().getColor(R.color.mala));
         }
 
     }
@@ -149,7 +187,7 @@ public class PerfilUserActivity extends AppCompatActivity {
             Glide.with(context).load(Uri.parse(articulos.get(position).getImagen())).into(holder.avator);
             holder.name.setText(articulos.get(position).nombre);
             holder.description.setText(articulos.get(position).getPrecio()+"");
-            holder.tienda.setText(articulos.get(position).getTienda());
+            holder.tienda.setText(user.getNombre());
 
         }
 
@@ -158,4 +196,14 @@ public class PerfilUserActivity extends AppCompatActivity {
             return articulos.size();
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
+    }
+
 }

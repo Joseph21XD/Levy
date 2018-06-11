@@ -5,4 +5,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
     <string name="ebayKey">JosephRa-Levy-PRD-167ac8c8b-9a7d6ab5</string>
+    <string name="s3awsKey">AKIAJFU5UNEGSLXEVHMQ</string>
+    <string name="s3awsSecret">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</string>
 </resources>
