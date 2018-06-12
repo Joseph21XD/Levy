@@ -106,8 +106,9 @@ public class Ingresar2 extends AppCompatActivity {
         Articulo articulo= BackendConnection.NuevoArticulo(Ingresar1.nombre,Ingresar1.descripcion,Double.parseDouble(Ingresar1.precio)
                 ,MainActivity.user.getId(),image,token);
         if(articulo!=null){
+            Principal.articulosUsuarios.clear();
             Toast.makeText(Ingresar2.this,"Artículo Ingresado",Toast.LENGTH_SHORT).show();
-            Intent intent= new Intent(Ingresar2.this,MainActivity.class);
+            Intent intent= new Intent(Ingresar2.this,Principal.class);
             startActivity(intent);
         }
         else{

@@ -6,6 +6,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -65,7 +66,7 @@ public class ArticuloActivity extends AppCompatActivity {
         else if(mode.equals("personal"))
             articulo = Principal.articulosPersonales.get(position);
         else{
-            usuario = BackendConnection.getUsuario(Principal.articulosStore.get(position).getTienda());
+            usuario = BackendConnection.getUsuario(Principal.articulosUsuarios.get(position).getTienda());
             articulo = Principal.articulosUsuarios.get(position);
         }
 

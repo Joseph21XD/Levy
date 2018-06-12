@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         sharedPreferences= this.getSharedPreferences("com.enigma.levy", getApplicationContext().MODE_PRIVATE);
         String token= sharedPreferences.getString("token","");
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
         if(!token.equals("")){
             user=BackendConnection.LoginToken(token);
             if(user!=null){
